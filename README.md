@@ -1,31 +1,31 @@
 # Nice Bench
 
-This Python script simulates a CPU-intensive task and runs multiple processes with varying `nice` levels to measure throughput and latency. The goal is to observe how different `nice` levels (which influence the priority of CPU scheduling in Unix-like systems) affect the execution time of CPU-bound tasks.
+This Python script benchmarks how different nice levels affect CPU-bound tasks, measuring throughput and latency. It runs processes with varying nice levels to observe their impact on execution time.
 
 ## Requirements
 
 - Python 3.x
-- Unix-like operating system (Linux, macOS, etc.) that supports `nice` levels.
+- A Unix-like OS with nice support (e.g., Linux, macOS)
 
 ## Usage
 
-The script accepts two command-line arguments:
+Command-line arguments:
 
-1. **`-t, --task-size`**: Defines the size of the CPU task (as a power of 10). Adjust this to simulate varying workloads. Default is 9.
-2. **`-n, --nice-duplicates`**: Specifies how many processes to run for each `nice` level. Default is 2.
+1. **`-t, --task-size`**: Sets the task size as a power of 10 (default: 9).
+2. **`-n, --nice-duplicates`**: Number of processes per nice level (default: 2).
 
 ### Example Usage
 
-To run the script with default parameters:
+Default run:
 
 ```bash
 sudo python3 nice-bench.py
 ```
 
-To run the script with custom parameters:
+Custom run without duplicate processes and reduced task size:
 
 ```bash
-sudo python3 nice-bench.py -t 10 -n 3
+sudo python3 nice-bench.py -t 7 -n 1
 ```
 
-Note: Invocation with `sudo` is required to set the `nice` level for the current process.
+Note: Invocation with `sudo` is required to set nice level for restricted nice levels.

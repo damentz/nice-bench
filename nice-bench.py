@@ -42,7 +42,11 @@ def measure_task(nice_level, task_size):
         return
 
     # Run the task
-    wakeup_latency_us = cpu_intensive_task(task_size) * 1000000
+    try:
+        wakeup_latency_us = cpu_intensive_task(task_size) * 1000000
+    except KeyboardInterrupt:
+        print(f"Task interrupted on pid {pid} with nice level {nice_level}")
+        return
 
     end_time = time.time()
 
@@ -76,10 +80,14 @@ def run_experiment(task_size, nice_levels):
     print()
 
     # Ensure all processes complete
-    for p in processes:
-        p.join()
+    try:
+        for p in processes:
+            p.join()
 
-    print("All tasks completed.")
+        print("All tasks completed")
+    except KeyboardInterrupt:
+        print("Experiment interrupted, all tasks stopped")
+
 
 
 def process_args():

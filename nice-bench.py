@@ -33,7 +33,13 @@ def measure_task(nice_level, task_size):
 
     # Set the nice level for the current process
     pid = os.getpid()
-    os.nice(nice_level)  # Apply nice level to current process
+
+    try:
+        os.nice(nice_level)  # Apply nice level to current process
+    except PermissionError:
+        print(f"Permission denied for process {pid}",
+              f"with nice level {nice_level}")
+        return
 
     print(f"Process {pid} running with nice level: {nice_level}")
 

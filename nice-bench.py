@@ -49,8 +49,7 @@ def measure_task(nice_level, task_size):
 def run_experiment(task_size, nice_levels):
     processes = []
 
-    for i in range(len(nice_levels)):
-        nice_level = nice_levels[i % len(nice_levels)]  # Cycle through the nice levels
+    for nice_level in nice_levels:
         p = multiprocessing.Process(target=measure_task, args=(nice_level, task_size))
         processes.append(p)
 

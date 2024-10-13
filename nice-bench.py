@@ -38,10 +38,8 @@ def measure_task(nice_level, task_size):
         os.nice(nice_level)  # Apply nice level to current process
     except PermissionError:
         print(f"Permission denied for process {pid}",
-              f"with nice level {nice_level}")
+              f"with nice level {nice_level}, skipping")
         return
-
-    print(f"Process {pid} running with nice level: {nice_level}")
 
     # Run the task
     wakeup_latency_us = cpu_intensive_task(task_size) * 1000000

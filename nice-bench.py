@@ -89,7 +89,6 @@ def run_experiment(task_size, nice_levels):
         print("Experiment interrupted, all tasks stopped")
 
 
-
 def process_args():
     parser = argparse.ArgumentParser(
         description="Run a CPU-intensive task with varying nice levels.")

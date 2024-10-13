@@ -5,9 +5,10 @@ import time
 import multiprocessing
 import argparse
 
+
 # Function to simulate CPU-intensive task
 def cpu_intensive_task(n):
-    time.sleep(0.1) # allow time for other processes to start
+    time.sleep(0.1)  # allow time for other processes to start
 
     total = 0
     wakeup_total = 0
@@ -25,6 +26,7 @@ def cpu_intensive_task(n):
 
     return wakeup_total / sleep_count
 
+
 # Function to measure throughput and latency
 def measure_task(nice_level, task_size):
     start_time = time.time()
@@ -41,16 +43,21 @@ def measure_task(nice_level, task_size):
     end_time = time.time()
 
     latency = end_time - start_time
-    print(f"Task completed with nice level {nice_level} in {latency:.2f} seconds, with wakeup latency of {wakeup_latency_us:.2f} microseconds")
+    print(
+        f"Task completed with nice level {nice_level} in {latency:.2f} " +
+        f"seconds, with wakeup latency of {wakeup_latency_us:.2f} microseconds"
+    )
 
     return latency
+
 
 # Main function to run the experiment
 def run_experiment(task_size, nice_levels):
     processes = []
 
     for nice_level in nice_levels:
-        p = multiprocessing.Process(target=measure_task, args=(nice_level, task_size))
+        p = multiprocessing.Process(target=measure_task,
+                                    args=(nice_level, task_size))
         processes.append(p)
 
     # Start all processes
@@ -61,9 +68,9 @@ def run_experiment(task_size, nice_levels):
 
     print()
     print(f"System has {os.cpu_count()} CPUs")
-    print(f"Launched {len(processes)} processes with nice levels: {nice_levels}")
+    print(f"Launched {len(processes)} processes w/ nice levels: {nice_levels}")
     print(f"Running task with size {task_size}")
-    print(f"Press Ctrl+C to stop the experiment")
+    print("Press Ctrl+C to stop the experiment")
     print()
 
     # Ensure all processes complete
@@ -74,9 +81,12 @@ def run_experiment(task_size, nice_levels):
 
 
 def process_args():
-    parser = argparse.ArgumentParser(description="Run a CPU-intensive task with varying nice levels.")
-    parser.add_argument("-t", "--task-size", type=int, default=9, help="Size of the CPU task (adjust to simulate workload)")
-    parser.add_argument("-n", "--nice-duplicates", type=int, default=2, help="Number of processes to run per nice level")
+    parser = argparse.ArgumentParser(
+        description="Run a CPU-intensive task with varying nice levels.")
+    parser.add_argument("-t", "--task-size", type=int, default=9,
+                        help="Size of the CPU task")
+    parser.add_argument("-n", "--nice-duplicates", type=int, default=2,
+                        help="Number of processes to run per nice level")
     return parser.parse_args()
 
 

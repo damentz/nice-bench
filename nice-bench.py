@@ -7,6 +7,8 @@ import argparse
 
 # Function to simulate CPU-intensive task
 def cpu_intensive_task(n):
+    time.sleep(0.1) # allow time for other processes to start
+
     total = 0
     wakeup_total = 0
     sleep_duration = 0.001

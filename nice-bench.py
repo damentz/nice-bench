@@ -57,7 +57,7 @@ def run_experiment(task_size, nice_levels):
     for p in processes:
         p.start()
 
-    time.sleep(1)  # Wait for all processes to start
+    time.sleep(0.1)  # Wait for all processes to start
 
     print()
     print(f"System has {os.cpu_count()} CPUs")

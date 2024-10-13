@@ -27,7 +27,7 @@ def cpu_intensive_task(n):
     return wakeup_total / sleep_count
 
 
-# Function to measure throughput and latency
+# Function to measure throughput and duration
 def measure_task(nice_level, task_size):
     start_time = time.time()
 
@@ -48,13 +48,13 @@ def measure_task(nice_level, task_size):
 
     end_time = time.time()
 
-    latency = end_time - start_time
+    duration = end_time - start_time
     print(
-        f"Task completed with nice level {nice_level} in {latency:.2f} " +
+        f"Task completed with nice level {nice_level} in {duration:.2f} " +
         f"seconds, with wakeup latency of {wakeup_latency_us:.2f} microseconds"
     )
 
-    return latency
+    return duration
 
 
 # Main function to run the experiment

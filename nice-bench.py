@@ -8,9 +8,20 @@ import argparse
 # Function to simulate CPU-intensive task
 def cpu_intensive_task(n):
     total = 0
+    wakeup_total = 0
+    sleep_duration = 0.001
+    sleep_count = 0
     for i in range(n):
         total += i ** 2
-    return total
+
+        if sleep_count % 1000 == 0:
+            sleep_start = time.time()
+            time.sleep(sleep_duration)
+            sleep_end = time.time()
+            wakeup_total += sleep_end - sleep_start - sleep_duration
+            sleep_count += 1
+
+    return wakeup_total / sleep_count
 
 # Function to measure throughput and latency
 def measure_task(nice_level, task_size):
@@ -23,12 +34,12 @@ def measure_task(nice_level, task_size):
     print(f"Process {pid} running with nice level: {nice_level}")
 
     # Run the task
-    cpu_intensive_task(task_size)
+    wakeup_latency_us = cpu_intensive_task(task_size) * 1000000
 
     end_time = time.time()
 
     latency = end_time - start_time
-    print(f"Task completed with nice level {nice_level} in {latency:.4f} seconds")
+    print(f"Task completed with nice level {nice_level} in {latency:.2f} seconds, with wakeup latency of {wakeup_latency_us:.2f} microseconds")
 
     return latency
 

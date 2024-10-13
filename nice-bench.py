@@ -14,7 +14,7 @@ SLEEP_INTERVAL = 1000
 SLEEP_DURATION = 0.001
 
 
-def cpu_intensive_task(n):
+def cpu_intensive_task(task_size: int) -> float:
     """Simulate a CPU-intensive task with periodic sleeps to measure wake-up latency."""
     time.sleep(0.1)  # Allow time for other processes to start
 
@@ -22,7 +22,7 @@ def cpu_intensive_task(n):
     wakeup_total = 0
     sleep_count = 0
 
-    for i in range(n):
+    for i in range(task_size):
         total += i**2
 
         if sleep_count % SLEEP_INTERVAL == 0:
@@ -32,10 +32,10 @@ def cpu_intensive_task(n):
             wakeup_total += sleep_end - sleep_start - SLEEP_DURATION
             sleep_count += 1
 
-    return wakeup_total / sleep_count if sleep_count > 0 else 0
+    return wakeup_total / sleep_count if sleep_count > 0 else float(0)
 
 
-def measure_task(nice_level, task_size):
+def measure_task(nice_level: int, task_size: int) -> float:
     """Measure throughput and duration of a task with a specific nice level."""
     start_time = time.time()
     pid = os.getpid()
@@ -46,13 +46,13 @@ def measure_task(nice_level, task_size):
         logging.warning(
             f"Permission denied for process {pid} with nice level {nice_level}, skipping"
         )
-        return
+        return 0
 
     try:
         wakeup_latency_us = cpu_intensive_task(task_size) * 1_000_000
     except KeyboardInterrupt:
         logging.info(f"Task interrupted on pid {pid} with nice level {nice_level}")
-        return
+        return 0
 
     duration = time.time() - start_time
     logging.info(
@@ -63,7 +63,7 @@ def measure_task(nice_level, task_size):
     return duration
 
 
-def run_experiment(task_size, nice_levels):
+def run_experiment(task_size: int, nice_levels: list[int]) -> None:
     """Run the experiment launching processes with given task size and nice levels."""
     processes = []
 

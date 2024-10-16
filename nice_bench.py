@@ -17,21 +17,24 @@ SLEEP_DURATION = 0.001
 
 def cpu_intensive_task(task_size: int) -> float:
     """Simulate a CPU-intensive task with periodic sleeps to measure wake-up latency."""
-    time.sleep(0.1)  # Allow time for other processes to start
 
     total = 0
     wakeup_total = 0
     sleep_count = 0
 
-    for i in range(task_size):
-        total += i**2
+    try:
+        time.sleep(0.01)  # Allow time for other processes to start
+        for i in range(task_size):
+            total += i**2
 
-        if sleep_count % SLEEP_INTERVAL == 0:
-            sleep_start = time.time()
-            time.sleep(SLEEP_DURATION)
-            sleep_end = time.time()
-            wakeup_total += sleep_end - sleep_start - SLEEP_DURATION
-            sleep_count += 1
+            if sleep_count % SLEEP_INTERVAL == 0:
+                sleep_start = time.time()
+                time.sleep(SLEEP_DURATION)
+                sleep_end = time.time()
+                wakeup_total += sleep_end - sleep_start - SLEEP_DURATION
+                sleep_count += 1
+    except KeyboardInterrupt:
+        pass
 
     return wakeup_total / sleep_count if sleep_count > 0 else float(0)
 
@@ -49,11 +52,7 @@ def measure_task(nice_level: int, task_size: int) -> float:
         )
         return 0
 
-    try:
-        wakeup_latency_us = cpu_intensive_task(task_size) * 1_000_000
-    except KeyboardInterrupt:
-        logging.info(f"Task interrupted on pid {pid} with nice level {nice_level}")
-        return 0
+    wakeup_latency_us = cpu_intensive_task(task_size) * 1_000_000
 
     duration = time.time() - start_time
     logging.info(
@@ -75,6 +74,8 @@ def run_experiment(task_size: int, nice_levels: list[int]) -> None:
     for p in processes:
         p.start()
 
+    start_time = time.time()
+
     logging.info(f"System has {os.cpu_count()} CPUs")
     logging.info(f"Launched {len(processes)} processes with nice levels: {nice_levels}")
     logging.info(
@@ -84,9 +85,14 @@ def run_experiment(task_size: int, nice_levels: list[int]) -> None:
     try:
         for p in processes:
             p.join()
-        logging.info("All tasks completed")
+
+        total_duration = time.time() - start_time
+        logging.info(f"All tasks completed in {total_duration:.2f} seconds")
     except KeyboardInterrupt:
-        logging.info("Experiment interrupted, all tasks stopped")
+        logging.info(
+            "Experiment interrupted, all tasks stopped after"
+            f"{time.time() - start_time:.2f} seconds"
+        )
 
 
 def process_args():

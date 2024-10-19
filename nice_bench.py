@@ -31,7 +31,9 @@ def cpu_intensive_task(task_size: int) -> float:
                 sleep_start = time.monotonic_ns()
                 time.sleep(SLEEP_DURATION)
                 sleep_end = time.monotonic_ns()
-                wakeup_total += sleep_end - sleep_start - (SLEEP_DURATION * 1_000_000_000)
+                wakeup_total += (
+                    sleep_end - sleep_start - (SLEEP_DURATION * 1_000_000_000)
+                )
                 sleep_count += 1
     except KeyboardInterrupt:
         pass

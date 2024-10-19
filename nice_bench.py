@@ -28,10 +28,10 @@ def cpu_intensive_task(task_size: int) -> float:
             total += i**2
 
             if sleep_count % SLEEP_INTERVAL == 0:
-                sleep_start = time.time()
+                sleep_start = time.monotonic_ns()
                 time.sleep(SLEEP_DURATION)
-                sleep_end = time.time()
-                wakeup_total += sleep_end - sleep_start - SLEEP_DURATION
+                sleep_end = time.monotonic_ns()
+                wakeup_total += sleep_end - sleep_start - (SLEEP_DURATION * 1_000_000_000)
                 sleep_count += 1
     except KeyboardInterrupt:
         pass
@@ -52,7 +52,7 @@ def measure_task(nice_level: int, task_size: int) -> float:
         )
         return 0
 
-    wakeup_latency_us = cpu_intensive_task(task_size) * 1_000_000
+    wakeup_latency_us = cpu_intensive_task(task_size) / 1000
 
     duration = time.time() - start_time
     logging.info(

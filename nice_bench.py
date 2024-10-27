@@ -15,6 +15,19 @@ SLEEP_INTERVAL = 1000
 SLEEP_DURATION = 0.001
 
 
+def calibrate_task_size() -> int:
+    """Calibrate task size over one second."""
+    task_size = 0
+    total = 0
+    start_time = time.time()
+
+    while time.time() - start_time < 1:
+        task_size += 1
+        total += task_size**2
+
+    return task_size
+
+
 def cpu_intensive_task(task_size: int) -> float:
     """Simulate a CPU-intensive task with periodic sleeps to measure wake-up latency."""
 
@@ -67,10 +80,16 @@ def measure_task(nice_level: int, task_size: int) -> float:
 
 def run_experiment(task_size: int, nice_levels: list[int]) -> None:
     """Run the experiment launching processes with given task size and nice levels."""
+
+    task_multiplier = calibrate_task_size()
+    logging.info(f"Calibrated task size: {task_multiplier}")
+
     processes = []
 
     for nice_level in nice_levels:
-        p = multiprocessing.Process(target=measure_task, args=(nice_level, task_size))
+        p = multiprocessing.Process(
+            target=measure_task, args=(nice_level, task_size * task_multiplier)
+        )
         processes.append(p)
 
     for p in processes:
@@ -120,4 +139,4 @@ if __name__ == "__main__":
     logging.info("Starting experiment...")
 
     nice_levels = [i for i in range(-20, 20) for _ in range(args.nice_duplicates)]
-    run_experiment(10**args.task_size, nice_levels)
+    run_experiment(args.task_size, nice_levels)

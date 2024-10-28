@@ -36,7 +36,7 @@ def cpu_intensive_task(task_size: int) -> float:
     sleep_count = 0
 
     try:
-        time.sleep(0.01)  # Allow time for other processes to start
+        time.sleep(0.1)  # Allow time for other processes to start
         for i in range(task_size):
             total += i**2
 

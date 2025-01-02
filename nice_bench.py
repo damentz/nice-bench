@@ -138,5 +138,5 @@ if __name__ == "__main__":
     args = process_args()
     logging.info("Starting experiment...")
 
-    nice_levels = [i for i in range(-20, 20) for _ in range(args.nice_duplicates)]
+    nice_levels = [i for i in range(20, -20, -1) for _ in range(args.nice_duplicates)]
     run_experiment(args.task_size, nice_levels)
